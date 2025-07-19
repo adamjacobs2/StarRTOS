@@ -3,11 +3,11 @@
 // Date Updated: 2023-07-27
 // Defines for FIFO functions for interprocess communication
 
-#include "../G8RTOS_IPC.h"
+#include "G8RTOS_IPC.h"
 
 /************************************Includes***************************************/
 
-#include "../G8RTOS_Semaphores.h"
+#include "G8RTOS_Semaphores.h"
 
 /******************************Data Type Definitions********************************/
 
