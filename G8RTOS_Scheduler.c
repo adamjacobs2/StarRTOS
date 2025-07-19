@@ -3,24 +3,16 @@
 // Date Updated: 2023-07-27
 // Defines for scheduler functions
 
-#include "../G8RTOS_Scheduler.h"
+#include "G8RTOS_Scheduler.h"
 
 /************************************Includes***************************************/
 
 #include <stdint.h>
 #include <stdbool.h>
 
-#include "../G8RTOS_CriticalSection.h"
+#include "G8RTOS_CriticalSection.h"
 
-#include <inc/hw_memmap.h>
-#include "inc/hw_types.h"
-#include "inc/hw_ints.h"
-#include "inc/hw_nvic.h"
-#include "driverlib/systick.h"
-#include "driverlib/sysctl.h"
-#include "driverlib/interrupt.h"
-#include "threads.h"
-#include <driverlib/timer.h>
+
 
 /********************************Private Variables**********************************/
 
@@ -47,17 +39,17 @@ static uint32_t threadCounter = 0;
 static void InitSysTick(void)
 {
     // hint: use SysCtlClockGet() to get the clock speed without having to hardcode it!
-    uint32_t clock = SysCtlClockGet();
+    //uint32_t clock = SysCtlClockGet();
     // Set systick period to overflow every 1 ms.
-    SysTickPeriodSet(clock / 1000);
+    //SysTickPeriodSet(clock / 1000);
     // Set systick interrupt handler
-    SysTickIntRegister(SysTick_Handler);
+    //SysTickIntRegister(SysTick_Handler);
     // Set pendsv handler
-    IntRegister(FAULT_PENDSV, PendSV_Handler);
+    //IntRegister(FAULT_PENDSV, PendSV_Handler);
     // Enable systick interrupt
-    SysTickIntEnable();
+    //SysTickIntEnable();
     // Enable systick
-    SysTickEnable();
+    //SysTickEnable();
 }
 
 
@@ -107,7 +99,7 @@ void SysTick_Handler() {
              }
         }
     }
-    HWREG(NVIC_INT_CTRL)|= NVIC_INT_CTRL_PEND_SV;
+    //HWREG(NVIC_INT_CTRL)|= NVIC_INT_CTRL_PEND_SV;
 
 
 }
@@ -124,7 +116,7 @@ void G8RTOS_Init() {
         newTable[i] = oldTable[i];
     }
 
-    HWREG(NVIC_VTABLE) = newVTORTable;
+    //HWREG(NVIC_VTABLE) = newVTORTable;
 
     SystemTime = 0;
     NumberOfThreads = 0;
@@ -143,9 +135,9 @@ int32_t G8RTOS_Launch() {
       // Set interrupt priorities
 
          // Pendsv
-      HWREG(NVIC_SYS_PRI3)|= ((uint32_t) 0b111) << 21;
+      //HWREG(NVIC_SYS_PRI3)|= ((uint32_t) 0b111) << 21;
          // Systick
-      HWREG(NVIC_SYS_PRI3)|= ((uint32_t) 0b111) << 29;
+      //HWREG(NVIC_SYS_PRI3)|= ((uint32_t) 0b111) << 29;
 
       // Call G8RTOS_Start()
       G8RTOS_Start();
@@ -271,8 +263,8 @@ sched_ErrCode_t G8RTOS_Add_APeriodicEvent(void (*AthreadToAdd)(void), uint8_t pr
     }
 
 
-      uint32_t* vectTable = HWREG(NVIC_VTABLE);
-      vectTable[IRQn] = AthreadToAdd;
+      //uint32_t* vectTable = HWREG(NVIC_VTABLE);
+      //vectTable[IRQn] = AthreadToAdd;
 
 
 
@@ -401,7 +393,7 @@ sched_ErrCode_t G8RTOS_KillSelf() {
    NumberOfThreads--;
    EndCriticalSection(status);
 
-   HWREG(NVIC_INT_CTRL)|= NVIC_INT_CTRL_PEND_SV;
+   //HWREG(NVIC_INT_CTRL)|= NVIC_INT_CTRL_PEND_SV;
 }
 
 // sleep
@@ -412,7 +404,7 @@ void sleep(uint32_t durationMS) {
     CurrentlyRunningThread->sleepCount = durationMS;
     // Set thread as asleep
     CurrentlyRunningThread->asleep = 1;
-    HWREG(NVIC_INT_CTRL)|= NVIC_INT_CTRL_PEND_SV;
+    //HWREG(NVIC_INT_CTRL)|= NVIC_INT_CTRL_PEND_SV;
 
 
 }
